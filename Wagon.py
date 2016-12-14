@@ -1,3 +1,3 @@
 class Wagon:
     def __init__(self):
-        pass
+        self.init = 0
