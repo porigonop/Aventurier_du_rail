@@ -44,14 +44,12 @@ class Graph:
         """ convert to a string the current instance """
         edges = [edge for edge in self.edges]
         announce = "************************\n" + \
-                   "* Display of the graph *\n" + \
+                   "* Display of the map *\n" + \
                    "************************\n"
-        nodes = "Nodes :\n_______\n\n" + ', '.join([node for node in self.nodes]) + \
-                "\n" * 2
-        edges = "Egdes :\n_______\n\n" + '\n'.join([edge[0] + " ---> " + edge[1] \
+        edges = "Lien :\n_______\n\n" + '\n'.join([edge[0] + " -" + edge[2] + "-> " + edge[1] + "color : " + edge[3] \
                                                     for edge in edges]) + '\n'
         separation = "========================="
-        return announce + nodes + edges + separation
+        return announce + edges + separation
 
     def add_a_node(self, node_name):
         """ Add a node to the current instance.
@@ -63,7 +61,7 @@ class Graph:
         self.nodes.add(node_name)
         self.adjacency_list[node_name] = []
 
-    def add_an_edge(self, from_node, to_node, value):
+    def add_an_edge(self, from_node, to_node, value, color):
         """ Add an edge to a graph if from_node and to_node are some nodes
         of the current graph
 
@@ -78,8 +76,8 @@ class Graph:
             if to_node in self.nodes:
                 self.adjacency_list[from_node].append(to_node)
                 self.adjacency_list[to_node].append(from_node)
-                self.edges.append((from_node, to_node, value))
-                self.edges.append((to_node, from_node, value))
+                self.edges.append((from_node, to_node, value, color))
+                self.edges.append((to_node, from_node, value, color))
             else:
                 raise NameError("The node " + to_node + " is not created yet")
         else:

@@ -9,3 +9,6 @@ class PiocheCarteDestination:
     
     def pick(self):
         return self.pioche.pop()
+    
+    def __repr__(self):
+        return str(self.pioche)

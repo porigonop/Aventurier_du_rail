@@ -17,7 +17,8 @@ class CarteDestination:
 
     def __repr__(self):
         """ """
-        return 'Point de départ ---> ' + self.departure + ' \n'
-                + ' Point d''arrivée ---> ' + self.arrival
+        return 'Point de départ ---> ' + self.departure + ' \n'\
+                + ' Point d''arrivée ---> ' + self.arrival + '\n'\
+                + 'valeur : ' + str(self.value)
     
                

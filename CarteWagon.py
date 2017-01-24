@@ -9,6 +9,6 @@ class CarteWagon:
         
     def __repr__(self):
         """ """
-        return 'Ceci est une carte wagon de couleur ' + str(self.color)
+        return 'carte wagon de couleur ' + str(self.color)
         
         
