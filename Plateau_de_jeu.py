@@ -12,11 +12,11 @@ from PiocheCarteWagon import PiocheCarteWagon
 
 class PlateauDeJeu:
     """
-    definit le Plateau de jeu
+    Class that define the board game
     """
 
     def __init__(self):
-        """ """
+        """ Class constructor  of class PlateauDeJeu"""
         fileh = open("fichiercsv/cartes_objectifs_-_version_epuree.csv")
         liste = [line[0:-1].split(":") for line in fileh]
         liste.pop(0)
@@ -46,7 +46,7 @@ class PlateauDeJeu:
 
     def jouer(self):
         """
-        permet de jouer
+        method that allows to play
         """
         joueur = self.joueur_1
         while True:

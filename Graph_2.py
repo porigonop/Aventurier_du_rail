@@ -140,20 +140,24 @@ class Graph:
             
     def dijkstra(self, departure):
         """ """
+        departure = 0
         visited = [departure]  # liste qui contiendra les sommets visités
         path = {}              # liste qui indiquera le chemin le plus court suivi
 
-        for node in self.nodes:     # for s in S
-            l_min = float('inf')    # on initialise tous les sommets de l = inf
-            visited[node] = None    # pour l'instant aucun sommet visité
+        for s in self.nodes:        # for s in S
+            l_min = float('inf')    # on initialise tous les sommets de l=inf
+            visited = None    # pour l'instant aucun sommet visité
+        """for sv in self.adjacency_list[sv]:
+            l_min[sv] =
+        """
 
-        while self.nodes:
+        while True:
             l_min = float('inf')
-            for node in visited:
-                if node in visited:
+            for s in self.nodes:
+                if s in visited:
                     if l_min == float('inf'):
                         l_min = node
-                    elif visited[node] < visited[l_min]:
+                    elif visited[s] < visited[l_min]:
                         l_min = node
             if l_min == float('inf'):
                 break
