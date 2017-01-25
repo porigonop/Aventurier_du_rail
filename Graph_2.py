@@ -138,36 +138,36 @@ class Graph:
             
         return parents
             
-    def dijkstra(self):
+    def dijkstra(self, departure):
         """ """
-        visited ={}
-        l = {}
+        visited = [departure]  # liste qui contiendra les sommets visités
+        path = {}              # liste qui indiquera le chemin le plus court suivi
 
-        for node in self.nodes:
-            l_min = float('infinity')
-            visited[node] = None
+        for node in self.nodes:     # for s in S
+            l_min = float('inf')    # on initialise tous les sommets de l = inf
+            visited[node] = None    # pour l'instant aucun sommet visité
 
-        while True:
-            l_min = float('infinity')
+        while self.nodes:
+            l_min = float('inf')
             for node in visited:
                 if node in visited:
-                    if l_min == float('infinity'):
-                        l = node
+                    if l_min == float('inf'):
+                        l_min = node
                     elif visited[node] < visited[l_min]:
                         l_min = node
-            if l_min == float('infinity'):
+            if l_min == float('inf'):
                 break
 
             self.nodes.remove(l_min)
             current = visited[l_min]
 
-        for i in self.adjacency_list[l_min]:
+        for i in self.edges[l_min]:
             liste = current + self.distance[(l_min, i)]
             if i not in visited or current < visited[i]:
                 visited[i] = current
-                l[i] = l_min
+                path[i] = l_min
 
-        return visited, l
+        return visited, path
             
 
 if __name__ == '__main__':
@@ -191,4 +191,4 @@ if __name__ == '__main__':
     G.add_an_edge('(1, 2)', '(1, 0)', 8)
     G.add_an_edge('(1, 2)', '(1, 1)', 9)
     print(G.breadth_first_search('(0, 0)'))
-    print(G.dijkstra())
+    print(G.dijkstra('(0, 0 )'))
