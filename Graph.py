@@ -135,6 +135,8 @@ class Graph:
             
         return parents
 
+
+
 if __name__ == '__main__':
     G = Graph()
     G.add_a_node('(0, 0)')

@@ -15,7 +15,6 @@ class Humain(Joueur):
 
         for carte in self.carte_wagon:
             print(carte)
-        """
         print("il possédes les cartes destination : ")
         for carte in self.carte_destination:
             print(carte)
@@ -26,7 +25,6 @@ class Humain(Joueur):
         print("enfin le plateau est : ")
         print("--------------------------")
         print(plateau.graph)
-        """
         print("que voulez vous faire ?\n"+\
               "1 : prendre carte wagon\n" + \
               "2 : prendre carte destination"+\
@@ -216,11 +214,13 @@ class Humain(Joueur):
                                             if carte.color == "multicolor":
                                                 cartes.append(carte)
                         if len(cartes) == edge[2]:
-                            print("oui !")
+                            print("Vous avez pris posséssion de la route !")
                             print(cartes)
                             plateau.used.append((depart, arriver))
                             plateau.used.append((arriver, depart))
                             plateau.uscol.append(self.color)
+                            plateau.value_uscol.append(edge[2])
+                            plateau.edgecolor[edge] = self.color
                             while len(cartes) != 0:
                                 self.carte_wagon.remove(cartes.pop())
 
