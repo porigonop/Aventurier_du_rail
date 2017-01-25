@@ -6,7 +6,7 @@
 # Institut Villebon, UE OP.5.i04             #
 # Simple class to represent graphs           #
 # Version 1                                  #
-# Author :                                   #
+# Authors :   Antoine et Lauren              #
 ##############################################
 
 class Graph:
@@ -141,13 +141,14 @@ class Graph:
         return parents
 
     def min_parent(self, parent_1, parent_2, l_min):
+        """ method that returns the shortest path from parents nodes"""
         if l_min[parent_1] < l_min[parent_2] + self.distances[str((parent_1,parent_2))]:
             return l_min[parent_1], parent_1
         else:
             return l_min[parent_2] + self.distances[str((parent_1,parent_2))], parent_2
        
     def dijkstra(self, departure):
-        """ """
+        """ returns the shortest path """
         visited = [departure]  # liste qui contiendra les sommets visités
         unvisited =  []        # liste contenantles sommets non visités
         path = {}               # dico qui indiquera le chemin le plus court suivi
@@ -155,10 +156,10 @@ class Graph:
         color = {}
         for s in self.nodes:        # for s in S
             l_min[s] = float('inf')    # on initialise tous les sommets de l=inf
-            color[s] = 1              #
+            color[s] = 1              
             path[s] = []              # liste qui contiendra le chemin suivi
         color[departure] = 0
-        l_min[departure] = 0         # pour l'instant aucun sommet visité
+        l_min[departure] = 0         
         path[departure] = None
         unvisited.append(departure)
         for v in self.adjacency_list[departure]:
@@ -168,10 +169,10 @@ class Graph:
         
 
         while len(unvisited) != 0 :
-            s_min = unvisited[0]
+            s_min = unvisited[0]          
             for s in unvisited:
                 if l_min[s] < l_min[s_min]:
-                    s_min = s
+                    s_min = s           # sommet non visité ayant la plus petite value
 
             for v in self.adjacency_list[s_min]:
                 if color[v] != 0:
