@@ -64,7 +64,7 @@ class Graph:
         self.nodes.add(node_name)
         self.adjacency_list[node_name] = []
 
-    def add_an_edge(self, from_node, to_node, value):
+    def add_an_edge(self, from_node, to_node, value, color):
         """ Add an edge to a graph if from_node and to_node are some nodes
         of the current graph
 
@@ -149,14 +149,14 @@ class Graph:
     def dijkstra(self, departure):
         """ """
         visited = [departure]  # liste qui contiendra les sommets visités
-        unvisited =  []
+        unvisited =  []        # liste contenantles sommets non visités
         path = {}               # dico qui indiquera le chemin le plus court suivi
         l_min = {}
         color = {}
         for s in self.nodes:        # for s in S
             l_min[s] = float('inf')    # on initialise tous les sommets de l=inf
-            color[s] = 1
-            path[s] = []
+            color[s] = 1              #
+            path[s] = []              # liste qui contiendra le chemin suivi
         color[departure] = 0
         l_min[departure] = 0         # pour l'instant aucun sommet visité
         path[departure] = None
