@@ -1,3 +1,8 @@
+#!usr/bin/env python3
+#####################################
+#Authors: A. LIEVRE et L. VAITANAKI #
+#Last Modifications : 01/25/2017    #
+#####################################
 """
 contient le joueur
 """
