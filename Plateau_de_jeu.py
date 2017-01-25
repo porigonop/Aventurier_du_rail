@@ -19,13 +19,13 @@ class PlateauDeJeu:
     def __init__(self):
         """ Class constructor  of class PlateauDeJeu"""
         fileh = open("fichiercsv/cartes_objectifs_-_version_epuree.csv", encoding="UTF-8")
-        liste = [line[0:-1].split(":") for line in fileh]
+        liste = [line[0:-1].split(":") for line in fileh] 
         liste.pop(0)
         fileh.close()
-        self.used = []
-        self.uscol = []
-        self.values_uscol = []
-        self.edgecolor = {}
+        self.used = []   # liste de toutes les arêtes qi ont été
+        self.uscol = []   # liste des couleurs utilisées pour les arêtes
+        self.values_uscol = [] #liste de taille de l'arête utilisée et sa couleur 
+        self.edgecolor = {}    # dico prend key en arete et en value la couleur du joueur
         self.graph = Graph()
         self.pioche_wagon = PiocheCarteWagon()
         self.pioche_wagon.shuffle()
