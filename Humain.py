@@ -32,23 +32,11 @@ class Humain(Joueur):
         while True:
             answer = input()
             if answer == "1":
-                if self.prendre_wagon(plateau):
-                    return True
-                else:
-                    print("erreur, que voulez vous faire :")
-                    print("1 : prendre carte wagon\n" + \
-                            "2 : prendre carte destination"+\
-                            "3 : poser une route")
-                    continue
+                self.prendre_wagon(plateau)
+                return True
             elif answer == "2":
-                if self.prendre_destination(plateau):
-                    return True
-                else:
-                    print("erreur, que voulez vous faire :")
-                    print("1 : prendre carte wagon\n" + \
-                          "2 : prendre carte destination"+\
-                          "3 : poser une route")
-                    continue
+                self.prendre_destination(plateau)
+                return True
 
             elif answer == "3":
                 if self.poser_route(plateau):
@@ -69,7 +57,7 @@ class Humain(Joueur):
             print(index, " : ", plateau.visible[index])
 
         while True:
-            print("indiquer le numero si vous voulez prendre une carte visible"\
+            print("indiquer le numero si vous voulez prendre une carte visible"+\
             " sinon pressez entrer")
             answer = input()
             if answer == "":
@@ -82,8 +70,8 @@ class Humain(Joueur):
                     answer = int(answer)
                 except ValueError:
                     print("vous n'avez pas entré un chiffre")
+                    continue
                 if answer in range(5):
-                    print("vous jouez")
 
                     carte = plateau.visible.pop(answer)
                     self.carte_wagon.append(carte)
@@ -164,8 +152,8 @@ class Humain(Joueur):
         permet de choisire une route et de jouer dessus si possible
         """
         while True:
-            depart = input("ville de départ : ")
-            if depart == "annulez:":
+            depart = input("ville de départ (pour annuler, entrer annuler): ")
+            if depart == "annuler":
                 return False
             if not depart in plateau.graph.nodes:
                 print("mauvais nom de ville")
@@ -186,7 +174,6 @@ class Humain(Joueur):
                 if edge[0] == depart and edge[1] == arriver:
                     if len(self.reserve_de_wagon) < edge[2]:
                         print("pas assez de wagons")
-
                     else:
                         if edge[3] != "Gris":
                             cartes = [carte for carte in self.carte_wagon if carte.color == edge[3]]
@@ -215,7 +202,6 @@ class Humain(Joueur):
                                                 cartes.append(carte)
                         if len(cartes) == edge[2]:
                             print("Vous avez pris posséssion de la route !")
-                            print(cartes)
                             plateau.used.append((depart, arriver))
                             plateau.used.append((arriver, depart))
                             plateau.uscol.append(self.color)
