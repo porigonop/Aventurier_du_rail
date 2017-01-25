@@ -1,14 +1,18 @@
 from Joueur import Joueur
-from PiocheCarteDestination import PiocheCarteDestination
-from PiocheCarteWagon import PiocheCarteWagon
-from CarteDestination import CarteDestination
-from CarteWagon import CarteWagon
+
+
 class Humain(Joueur):
+    """
+    défini le joueur humain
+    """
     def jouer(self, plateau):
-        
+        """
+        permet a un humain de jouer
+        """
         print("le joueur " + self.color + " joue")
-        
+
         print("il possédes les cartes wagons suivantes : ")
+
         for carte in self.carte_wagon:
             print(carte)
         """
@@ -19,31 +23,37 @@ class Humain(Joueur):
         print("et il lui reste : " +\
          str(len(self.reserve_de_wagon)) \
          + " wagons")
-        #print("enfin le plateau est : ")
-        #print("--------------------------")
-        #print(plateau.graph)
+        print("enfin le plateau est : ")
+        print("--------------------------")
+        print(plateau.graph)
         """
         print("que voulez vous faire ?\n"+\
-        "prendre wagon\n" + \
-        "prendre destination")
+        "1 : prendre carte wagon\n" + \
+        "2 : prendre carte destination"+\
+        "3 : poser une route")
         while True:
             answer = input()
-            if answer == "prendre wagon":
+            if answer == "1n":
                 self.prendre_wagon(plateau)
                 return True
-            elif answer == "prendre destination":
+            elif answer == "2":
                 self.prendre_destination(plateau)
                 return True
-            elif answer == "":#"poser route":
+            elif answer == "3":
                 self.poser_route(plateau)
                 return True
+
     def prendre_wagon(self, plateau):
+        """
+        permet de prendre un wagon
+        """
         print("les wagons visibles sont : ")
-        for carte in plateau.visible:
-            print(carte)
-            
+        for index in len(plateau.visible):
+            print(index, " : ", plateau.visible[index])
+
         while True:
-            print("indiquer une couleur si vous voulez prendre une carte visible sinon pressez entrer")
+            print("indiquer le numero si vous voulez prendre une carte visible"\
+            " sinon pressez entrer")
             answer = input()
             if answer == "":
                 carte = plateau.pioche_wagon.pick()
@@ -53,11 +63,11 @@ class Humain(Joueur):
             else:
                 try:
                     answer = int(answer)
-                except:
-                    pass
+                except ValueError:
+                    print("vous n'avez pas entré un chiffre")
                 if answer in range(5):
                     print("vous jouez")
-                    
+
                     carte = plateau.visible.pop(answer)
                     self.carte_wagon.append(carte)
                     plateau.visible.append(plateau.pioche_wagon.pick())
@@ -66,24 +76,25 @@ class Humain(Joueur):
                         return
                     break
             print("couleur non trouvée")
-            
+
         print("les wagon visibles sont : ")
         for carte in plateau.visible:
             print(carte)
-            
+
         while True:
-            print("indiquer une couleur si vous voulez prendre une carte visible sinon pressez entrer")
+            print("indiquer une couleur si vous voulez prendre une carte"\
+            +" visible sinon pressez entrer")
             answer = input()
             if answer == "":
                 carte = plateau.pioche_wagon.pick()
                 self.carte_wagon.append(carte)
-                
+
                 print("vous piocher une " + str(carte))
                 break
             else:
                 try:
                     answer = int(answer)
-                except:
+                except ValueError:
                     pass
                 if answer in range(5):
                     carte = plateau.visible.pop(answer)
@@ -97,11 +108,14 @@ class Humain(Joueur):
             print("couleur non trouvée")
 
     def prendre_destination(self, plateau):
+        """
+        permet de piocher une carte destination sur le plateau
+        """
         lst = []
         for i in range(3):
             try:
                 lst.append(plateau.pioche_destination.pick())
-            except:
+            except IndexError:
                 print("il n'y avait pas assez de cartes")
                 break
         print("voici vos cartes destination")
@@ -121,47 +135,48 @@ class Humain(Joueur):
                     impo = True
             if impo:
                 continue
-                
+
             for i in answer:
                 i = int(i)
                 self.carte_destination.append(lst.pop(i))
             for carte in lst:
                 plateau.pioche_destination.pioche.append(carte)
-            
+
     def poser_route(self, plateau):
+        """
+        permet de choisire une route et de jouer dessus si possible
+        """
         while True:
             depart = input("ville de départ : ")
-            
+
             if not depart in plateau.graph.nodes:
                 print("mauvais nom de ville")
                 continue
-            
+
             arriver = input("ville d'arriver : ")
-            
+
             if depart == arriver or not arriver in plateau.graph.nodes:
                 print("mauvais nom de ville")
                 continue
-            
-            if not depart in plateau.graph.adjacency_list[arriver] and (depart, arriver) in plateau.used:
+
+            if not depart in plateau.graph.adjacency_list[arriver] \
+            and (depart, arriver) in plateau.used:
                 print("la route n'est pas disponible")
                 break
-            
+
             for edge in plateau.graph.edges:
                 if edge[0] == depart and edge[1] == arriver:
-                    if not len(self.reserve_de_wagon) < edge[2]:
+                    if len(self.reserve_de_wagon) < edge[2]:
                         print("pas assez de wagons")
-                        pass
+
                     else:
-                        cartes = [carte for carte in self.carte_wagon if carte.color == edge[3]]
+                        if edge[3] != "Gris":
+                            cartes = [carte for carte in self.carte_wagon if carte.color == edge[3]]
                         if len(cartes) < edge[2]:
-                            print("pas assez de carte :", cartes, edges[2])
-                            pass
+                            print("pas assez de carte :", cartes, edge[2])
                         else:
                             print("oui !")
                             plateau.used.append((depart, arriver))
                             plateau.used.append((arriver, depart))
                             plateau.uscol.append(self.color)
                             return True
-            
-        
-        
