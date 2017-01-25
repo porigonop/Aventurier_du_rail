@@ -20,10 +20,10 @@ class PiocheCarteWagon:
         """
         self.pioche = [CarteWagon(COLOR[i]) \
                         for i in range(len(COLOR)-1)\
-                        for j in range(12)]+\
+                        for j in range(22)]+\
                         [CarteWagon(COLOR[-1]) for i in range(14)]
-                        
-        self.defausse = []
+
+        self.defaus = []
         
         
     def shuffle(self):
@@ -36,7 +36,7 @@ class PiocheCarteWagon:
     
     def defausse(self, carte):
         """ method to discard"""
-        self.defausse.append(carte)
+        self.defaus.append(carte)
     
     def __repr__(self):
         """ method that allows to print the object """

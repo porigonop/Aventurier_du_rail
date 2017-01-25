@@ -206,7 +206,7 @@ class Humain(Joueur):
                             plateau.used.append((arriver, depart))
                             plateau.uscol.append(self.color)
                             plateau.value_uscol.append(edge[2])
-                            plateau.edgecolor[edge] = self.color
+                            plateau.edgecolor[str(edge)] = self.color
                             while len(cartes) != 0:
                                 self.carte_wagon.remove(cartes.pop())
 

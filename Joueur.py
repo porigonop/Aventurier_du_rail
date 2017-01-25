@@ -36,11 +36,11 @@ class Joueur:
         score = 0
         for carte in self.carte_destination:
             if plateau.linked(carte.departure, carte.arrival, self.color):
-                score += carte.score
+                score += int(carte.value)
             else:
-                score -= carte.score
+                score -= int(carte.value)
 
-        for index in len(plateau.uscol):
+        for index in range(len(plateau.uscol)):
             if plateau.uscol[index] == self.color:
-                score += plateau.value_uscol[index]
+                score += plateau.values_uscol[index]
         return score

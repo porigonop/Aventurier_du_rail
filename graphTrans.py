@@ -390,7 +390,7 @@ class GraphTrans:
         # Création de ferm_trans la fermeture transitive du graph self à partir
         # de matrix_ferm_trans
         
-        ferm_trans = Graph()
+        ferm_trans = GraphTrans()
 
         # ferm_trans reprend les mêmes sommets que le graph self.
         for node in nodes:

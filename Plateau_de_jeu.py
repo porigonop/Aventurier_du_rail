@@ -7,8 +7,10 @@ from graphTrans import GraphTrans
 from Graph import Graph
 from CarteDestination import CarteDestination
 from Humain import Humain
+from Ordinateur import Ordinateur
 from PiocheCarteDestination import PiocheCarteDestination
 from PiocheCarteWagon import PiocheCarteWagon
+from pprint import pprint
 
 
 class PlateauDeJeu:
@@ -34,8 +36,8 @@ class PlateauDeJeu:
 
         self.pioche_destination.shuffle()
         self.visible = [self.pioche_wagon.pick() for i in range(5)]
-        self.joueur_1 = Humain(self.pioche_wagon, self.pioche_destination, adversaire=None)
-        self.joueur_2 = Humain(self.pioche_wagon, self.pioche_destination, adversaire=self.joueur_1)
+        self.joueur_1 = Ordinateur(self.pioche_wagon, self.pioche_destination, adversaire=None)#Humain(self.pioche_wagon, self.pioche_destination, adversaire=None)
+        self.joueur_2 = Ordinateur(self.pioche_wagon, self.pioche_destination, adversaire=self.joueur_1)#Humain(self.pioche_wagon, self.pioche_destination, adversaire=self.joueur_1)
         self.joueur_1.adversaire = self.joueur_2
         fileh = open("fichiercsv/cartes_bretagne_-_version_epuree.csv", encoding="UTF-8")
         lines = [line[:-1].split(":") for line in fileh][1:]
@@ -47,6 +49,9 @@ class PlateauDeJeu:
                 self.graph.add_a_node(line[1])
             self.graph.add_an_edge(line[0], line[1], int(line[2]), line[3])
 
+        for edge in self.graph.edges:
+            self.edgecolor[str(edge)] = None
+
     def jouer(self):
         """
         method that allows to play
@@ -57,17 +62,17 @@ class PlateauDeJeu:
             if len(joueur.adversaire.reserve_de_wagon) <= 2:
                 break
             joueur = joueur.adversaire
-    
+        print("joueur 1 :", self.joueur_1.calculate_final_score(self))
+        print("joueur 2 :", self.joueur_2.calculate_final_score(self))
     def linked(self, depart, arrivee, color):
         new_g = GraphTrans()
         for node in self.graph.nodes:
             new_g.add_a_node(node)
-        
         for edge in self.graph.edges:
-            if self.edgecolor[edge] == color:
+            if self.edgecolor[str(edge)] == color:
                 new_g.add_an_edge(edge[0], edge[1])
         new_gtrans = new_g.transitive_closure_V1()
-        if (depart, arrivee) in new_gtrans:
+        if (depart, arrivee) in new_gtrans.edges:
             return True
         else:
             return False
