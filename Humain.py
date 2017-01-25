@@ -1,5 +1,5 @@
 from Joueur import Joueur
-
+from CarteWagon import CarteWagon
 
 class Humain(Joueur):
     """
@@ -28,20 +28,39 @@ class Humain(Joueur):
         print(plateau.graph)
         """
         print("que voulez vous faire ?\n"+\
-        "1 : prendre carte wagon\n" + \
-        "2 : prendre carte destination"+\
-        "3 : poser une route")
+              "1 : prendre carte wagon\n" + \
+              "2 : prendre carte destination"+\
+              "3 : poser une route")
         while True:
             answer = input()
-            if answer == "1n":
-                self.prendre_wagon(plateau)
-                return True
+            if answer == "1":
+                if self.prendre_wagon(plateau):
+                    return True
+                else:
+                    print("erreur, que voulez vous faire :")
+                    print("1 : prendre carte wagon\n" + \
+                            "2 : prendre carte destination"+\
+                            "3 : poser une route")
+                    continue
             elif answer == "2":
-                self.prendre_destination(plateau)
-                return True
+                if self.prendre_destination(plateau):
+                    return True
+                else:
+                    print("erreur, que voulez vous faire :")
+                    print("1 : prendre carte wagon\n" + \
+                          "2 : prendre carte destination"+\
+                          "3 : poser une route")
+                    continue
+
             elif answer == "3":
-                self.poser_route(plateau)
-                return True
+                if self.poser_route(plateau):
+                    return True
+                else:
+                    print("erreur, que voulez vous faire :")
+                    print("1 : prendre carte wagon\n" + \
+                          "2 : prendre carte destination"+\
+                          "3 : poser une route")
+                    continue
 
     def prendre_wagon(self, plateau):
         """
@@ -148,7 +167,8 @@ class Humain(Joueur):
         """
         while True:
             depart = input("ville de départ : ")
-
+            if depart == "annulez:":
+                return False
             if not depart in plateau.graph.nodes:
                 print("mauvais nom de ville")
                 continue
@@ -156,14 +176,14 @@ class Humain(Joueur):
             arriver = input("ville d'arriver : ")
 
             if depart == arriver or not arriver in plateau.graph.nodes:
-                print("mauvais nom de ville")
+                print("mauvais nom de ville, retour à la ville de depart")
                 continue
 
             if not depart in plateau.graph.adjacency_list[arriver] \
-            and (depart, arriver) in plateau.used:
+            or (depart, arriver) in plateau.used:
                 print("la route n'est pas disponible")
-                break
-
+                continue
+            print((depart, arriver), plateau.used)
             for edge in plateau.graph.edges:
                 if edge[0] == depart and edge[1] == arriver:
                     if len(self.reserve_de_wagon) < edge[2]:
@@ -172,11 +192,36 @@ class Humain(Joueur):
                     else:
                         if edge[3] != "Gris":
                             cartes = [carte for carte in self.carte_wagon if carte.color == edge[3]]
-                        if len(cartes) < edge[2]:
-                            print("pas assez de carte :", cartes, edge[2])
                         else:
+                            for i in range(edge[2]):
+                                cartes = []
+                                while True:
+                                    print("quelle couleur utiliser ?")
+                                    couleur = input()
+                                    if couleur in [carte.color for carte in self.carte_wagon]:
+                                        for carte in self.carte_wagon:
+                                            if carte.color == couleur:
+                                                cartes.append(carte)
+                                                break
+                                        break
+
+                        if len(cartes) < edge[2]:
+                            print("pas assez de carte :", len(cartes), "<", edge[2])
+                            if not edge[2] > len([carte.color for carte in self.carte_wagon if carte.color == "multicolor"] + carte):
+                                print("voulez vous ajouter des cartes multicolor ?")
+                                answer = input()
+                                if answer == "oui":
+                                    for i in range(edge[2] - len(carte)):
+                                        for carte in self.carte_wagon:
+                                            if carte.color == "multicolor":
+                                                cartes.append(carte)
+                        if len(cartes) == edge[2]:
                             print("oui !")
+                            print(cartes)
                             plateau.used.append((depart, arriver))
                             plateau.used.append((arriver, depart))
                             plateau.uscol.append(self.color)
+                            while len(cartes) != 0:
+                                self.carte_wagon.remove(cartes.pop())
+
                             return True
