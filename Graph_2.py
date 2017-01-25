@@ -81,6 +81,8 @@ class Graph:
                 self.adjacency_list[to_node].append(from_node)
                 self.edges.append((from_node, to_node, value))
                 self.edges.append((to_node, from_node, value))
+                self.distances[str((from_node, to_node))] = value
+                self.distances[str((to_node, from_node))] = value
             else:
                 raise NameError("The node " + to_node + " is not created yet")
         else:
@@ -137,62 +139,67 @@ class Graph:
             fifo.append(node)
             
         return parents
-            
+
+    def min_parent(self, parent_1, parent_2, l_min):
+        if l_min[parent_1] < l_min[parent_2] + self.distances[str((parent_1,parent_2))]:
+            return l_min[parent_1], parent_1
+        else:
+            return l_min[parent_2] + self.distances[str((parent_1,parent_2))], parent_2
+       
     def dijkstra(self, departure):
         """ """
-        departure = 0
         visited = [departure]  # liste qui contiendra les sommets visités
-        path = {}              # liste qui indiquera le chemin le plus court suivi
-
+        unvisited =  []
+        path = {}               # dico qui indiquera le chemin le plus court suivi
+        l_min = {}
+        color = {}
         for s in self.nodes:        # for s in S
-            l_min = float('inf')    # on initialise tous les sommets de l=inf
-            visited = None    # pour l'instant aucun sommet visité
-        """for sv in self.adjacency_list[sv]:
-            l_min[sv] =
-        """
+            l_min[s] = float('inf')    # on initialise tous les sommets de l=inf
+            color[s] = 1
+            path[s] = []
+        color[departure] = 0
+        l_min[departure] = 0         # pour l'instant aucun sommet visité
+        path[departure] = None
+        unvisited.append(departure)
+        for v in self.adjacency_list[departure]:
+            if not v in unvisited:
+                l_min[v] = self.distances[str((departure, v))]
+                unvisited.append(v)
+        
 
-        while True:
-            l_min = float('inf')
-            for s in self.nodes:
-                if s in visited:
-                    if l_min == float('inf'):
-                        l_min = node
-                    elif visited[s] < visited[l_min]:
-                        l_min = node
-            if l_min == float('inf'):
-                break
+        while len(unvisited) != 0 :
+            s_min = unvisited[0]
+            for s in unvisited:
+                if l_min[s] < l_min[s_min]:
+                    s_min = s
 
-            self.nodes.remove(l_min)
-            current = visited[l_min]
+            for v in self.adjacency_list[s_min]:
+                if color[v] != 0:
+                    l_min[v], new_v = self.min_parent(v, s_min, l_min)
+                    if v != new_v:
+                        path[v] = new_v
+                    if not v in unvisited:
+                        unvisited.append(v)
+                    
+            color[s_min] = 0               
+            unvisited.remove(s_min)
+            visited.append(s_min)
 
-        for i in self.edges[l_min]:
-            liste = current + self.distance[(l_min, i)]
-            if i not in visited or current < visited[i]:
-                visited[i] = current
-                path[i] = l_min
-
-        return visited, path
+        return l_min, path
+  
             
+
 
 if __name__ == '__main__':
     G = Graph()
-    G.add_a_node('(0, 0)')
-    G.add_a_node('(0, 1)')
-    G.add_a_node('(0, 2)')
-    G.add_a_node('(1, 0)')
-    G.add_a_node('(1, 1)')
-    G.add_a_node('(1, 2)')
-    G.add_a_node('(2, 0)')
-    G.add_a_node('(2, 1)')
-    G.add_a_node('(2, 2)')
-    G.add_an_edge('(0, 1)', '(0, 0)', 3)
-    G.add_an_edge('(0, 2)', '(0, 0)', 2)
-    G.add_an_edge('(0, 2)', '(0, 1)', 3)
-    G.add_an_edge('(1, 0)', '(0, 0)', 5)
-    G.add_an_edge('(1, 1)', '(0, 1)', 10)
-    G.add_an_edge('(1, 1)', '(1, 0)', 2)
-    G.add_an_edge('(1, 2)', '(0, 2)', 5)
-    G.add_an_edge('(1, 2)', '(1, 0)', 8)
-    G.add_an_edge('(1, 2)', '(1, 1)', 9)
-    print(G.breadth_first_search('(0, 0)'))
-    print(G.dijkstra('(0, 0 )'))
+    fileh = open("fichiercsv/cartes_bretagne_-_version_epuree.csv", encoding = "UTF-8")
+    lines = [line[:-1].split(":") for line in fileh][1:]
+    fileh.close()
+    for line in lines:
+        if not line[0] in G.nodes:
+            G.add_a_node(line[0])
+        if not line[1] in G.nodes:
+            G.add_a_node(line[1])
+        G.add_an_edge(line[0], line[1], int(line[2]))
+
+    d, v = G.dijkstra('Brest')
