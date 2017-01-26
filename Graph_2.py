@@ -64,7 +64,7 @@ class Graph:
         self.nodes.add(node_name)
         self.adjacency_list[node_name] = []
 
-    def add_an_edge(self, from_node, to_node, value, color):
+    def add_an_edge(self, from_node, to_node, value):
         """ Add an edge to a graph if from_node and to_node are some nodes
         of the current graph
 
@@ -204,3 +204,11 @@ if __name__ == '__main__':
         G.add_an_edge(line[0], line[1], int(line[2]))
 
     d, v = G.dijkstra('Brest')
+    """  RESTART: C:\Users\charpak2.33\Documents\GitHub\Aventurier_du_rail\Graph_2.py 
+        >>> d
+        {'Dinan': 13, 'Ploërmel': 11, 'Lorient': 7, 'Rennes': 15, 'Saint Malo': 14, 'Carhaix': 5,
+        'Quimper': 3, 'Brest': 0, 'Vannes': 10, 'Perros-Guirec': 5, 'Pontivy': 8}
+        >>> v
+        {'Dinan': 'Pontivy', 'Ploërmel': 'Pontivy', 'Lorient': 'Quimper', 'Rennes': 'Ploërmel','Saint Malo': 'Dinan',
+        'Carhaix': 'Brest', 'Quimper': 'Brest', 'Brest': None, 'Vannes': 'Lorient', 'Perros-Guirec': 'Brest', 'Pontivy': 'Carhaix'}
+    """
