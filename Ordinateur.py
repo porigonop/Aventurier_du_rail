@@ -40,6 +40,7 @@ class Ordinateur(Joueur):
                         plateau.values_uscol.append(edge[2])
                         plateau.edgecolor[str(edge)] = self.color
                         a_jouer = True
+                        print(self.color, "as pris la route :", edge[0], edge[1], "de couleur :", edge[3])
                         while len(cartes) != 0:
                             carte = cartes.pop()
                             self.reserve_de_wagon.pop()
@@ -50,9 +51,10 @@ class Ordinateur(Joueur):
             try:
                 self.carte_wagon.append(plateau.pioche_wagon.pick())
                 self.carte_wagon.append(plateau.pioche_wagon.pick())
+                print(self.color, "as piocher une carte wagon")
             except:
-                print("plus de carte dans la pioche, mon faible esprit ne me permet pas de continuer la partie, je déclare forfait")
-                input()
+                print(self.color, "plus de carte dans la pioche, mon faible esprit ne me permet pas de continuer la partie, je déclare forfait")
+                return False
         
 
 

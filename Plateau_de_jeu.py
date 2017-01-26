@@ -1,4 +1,3 @@
-
 ####################################
 #Authors : Antoine L. et Lauren V. #
 #Last Modification :01/25/2017     #
@@ -10,7 +9,6 @@ from Humain import Humain
 from Ordinateur import Ordinateur
 from PiocheCarteDestination import PiocheCarteDestination
 from PiocheCarteWagon import PiocheCarteWagon
-from pprint import pprint
 
 
 class PlateauDeJeu:
@@ -18,15 +16,15 @@ class PlateauDeJeu:
     Class that define the board game
     """
 
-    def __init__(self):
+    def __init__(self, j1="o", j2="o"):
         """ Class constructor  of class PlateauDeJeu"""
         fileh = open("fichiercsv/cartes_objectifs_-_version_epuree.csv", encoding="UTF-8")
-        liste = [line[0:-1].split(":") for line in fileh] 
+        liste = [line[0:-1].split(":") for line in fileh]
         liste.pop(0)
         fileh.close()
         self.used = []   # liste de toutes les arêtes qi ont été
         self.uscol = []   # liste des couleurs utilisées pour les arêtes
-        self.values_uscol = [] #liste de taille de l'arête utilisée et sa couleur 
+        self.values_uscol = [] #liste de taille de l'arête utilisée et sa couleur
         self.edgecolor = {}    # dico prend key en arete et en value la couleur du joueur
         self.graph = Graph()
         self.pioche_wagon = PiocheCarteWagon()
@@ -36,8 +34,14 @@ class PlateauDeJeu:
 
         self.pioche_destination.shuffle()
         self.visible = [self.pioche_wagon.pick() for i in range(5)]
-        self.joueur_1 = Ordinateur(self.pioche_wagon, self.pioche_destination, adversaire=None)#Humain(self.pioche_wagon, self.pioche_destination, adversaire=None)
-        self.joueur_2 = Ordinateur(self.pioche_wagon, self.pioche_destination, adversaire=self.joueur_1)#Humain(self.pioche_wagon, self.pioche_destination, adversaire=self.joueur_1)
+        if j1 == "j":
+            self.joueur_1 = Humain(self.pioche_wagon, self.pioche_destination, adversaire=None)
+        else:
+            self.joueur_1 = Ordinateur(self.pioche_wagon, self.pioche_destination, adversaire=None)
+        if j2 == "j":
+            self.joueur_2 = Ordinateur(self.pioche_wagon, self.pioche_destination, adversaire=self.joueur_1)
+        else:
+            self.joueur_2 = Ordinateur(self.pioche_wagon, self.pioche_destination, adversaire=self.joueur_1)
         self.joueur_1.adversaire = self.joueur_2
         fileh = open("fichiercsv/cartes_bretagne_-_version_epuree.csv", encoding="UTF-8")
         lines = [line[:-1].split(":") for line in fileh][1:]
@@ -58,13 +62,17 @@ class PlateauDeJeu:
         """
         joueur = self.joueur_1
         while True:
-            joueur.jouer(self)
+            if joueur.jouer(self) is False:
+                break
             if len(joueur.adversaire.reserve_de_wagon) <= 2:
                 break
             joueur = joueur.adversaire
-        print("joueur 1 :", self.joueur_1.calculate_final_score(self))
-        print("joueur 2 :", self.joueur_2.calculate_final_score(self))
+        print(self.joueur_1.color, "a marqué", self.joueur_1.calculate_final_score(self), "points")
+        print(self.joueur_2.color, "a marqué", self.joueur_2.calculate_final_score(self), "points")
     def linked(self, depart, arrivee, color):
+        """
+        permet de voir si il y a un lien entre depart et arriver de la couleur mise en parametre
+        """
         new_g = GraphTrans()
         for node in self.graph.nodes:
             new_g.add_a_node(node)
@@ -77,7 +85,8 @@ class PlateauDeJeu:
         else:
             return False
 
-    
 if __name__ == "__main__":
-    PLATEAU = PlateauDeJeu()
+    J1 = input("joueur 1 doit être un joueur ou un Ordinateur? (j pour joueur , o pour ordinateur)")
+    J2 = input("joueur 2 doit être un joueur ou un Ordinateur? (j pour joueur,  o pour Ordinateur)")
+    PLATEAU = PlateauDeJeu(J1, J2)
     PLATEAU.jouer()
